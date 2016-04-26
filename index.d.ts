@@ -1,14 +1,7 @@
-// Type definitions for request
-// Project: https://github.com/mikeal/request
-// Imported by: https://github.com/louy
-// Imported from: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/request/request.d.ts
-// Definitions by: Carlos Ballesteros Velasco <https://github.com/soywiz>, bonnici <https://github.com/bonnici>, Bart van der Schoor <https://github.com/Bartvds>, Joe Skeen <http://github.com/joeskeen>, Christopher Currens <https://github.com/ccurrens>
-
-import stream = require('stream');
-import http = require('http');
-import FormData = require('form-data');
-import url = require('url');
-import fs = require('fs');
+import {Stream} from 'stream';
+import {Agent, ClientRequest, IncomingMessage} from 'http';
+import {Url} from 'url';
+import * as FormData from 'form-data';
 
 declare namespace request {
 	export interface RequestAPI<TRequest extends Request,
@@ -59,6 +52,7 @@ declare namespace request {
 		TUriUrlOptions>	extends RequestAPI<TRequest, TOptions, TUriUrlOptions> {
 
 		defaults(options: TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
+    defaults(options: RequiredUriUrl & TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
 		(): TRequest;
 		get(): TRequest;
 		post(): TRequest;
@@ -70,7 +64,7 @@ declare namespace request {
 
 	interface CoreOptions {
 		baseUrl?: string;
-		callback?: (error: any, response: http.IncomingMessage, body: any) => void;
+		callback?: (error: any, response: IncomingMessage, body: any) => void;
 		jar?: any; // CookieJar
 		formData?: any; // Object
 		form?: any; // Object or string
@@ -89,7 +83,7 @@ declare namespace request {
 		method?: string;
 		headers?: Headers;
 		body?: any;
-		followRedirect?: boolean | ((response: http.IncomingMessage) => boolean);
+		followRedirect?: boolean | ((response: IncomingMessage) => boolean);
 		followAllRedirects?: boolean;
 		maxRedirects?: number;
 		encoding?: string;
@@ -126,7 +120,7 @@ declare namespace request {
       export type Options = OptionsWithUri | OptionsWithUrl;
 
 	export interface RequestCallback {
-		(error: any, response: http.IncomingMessage, body: any): void;
+		(error: any, response: IncomingMessage, body: any): void;
 	}
 
 	export interface HttpArchiveRequest {
@@ -157,11 +151,11 @@ declare namespace request {
 		body: any;
 	}
 
-	export interface Request extends stream.Stream {
+	export interface Request extends Stream {
 		readable: boolean;
 		writable: boolean;
 
-		getAgent(): http.Agent;
+		getAgent(): Agent;
 		//start(): void;
 		//abort(): void;
 		pipeDest(dest: any): void;
@@ -178,11 +172,11 @@ declare namespace request {
 		jar(jar: CookieJar): Request;
 
 		on(event: string, listener: Function): this;
-		on(event: 'request', listener: (req: http.ClientRequest) => void): this;
-		on(event: 'response', listener: (resp: http.IncomingMessage) => void): this;
+		on(event: 'request', listener: (req: ClientRequest) => void): this;
+		on(event: 'response', listener: (resp: IncomingMessage) => void): this;
 		on(event: 'data', listener: (data: Buffer | string) => void): this;
 		on(event: 'error', listener: (e: Error) => void): this;
-		on(event: 'complete', listener: (resp: http.IncomingMessage, body?: string | Buffer) => void): this;
+		on(event: 'complete', listener: (resp: IncomingMessage, body?: string | Buffer) => void): this;
 
 		write(buffer: Buffer, cb?: Function): boolean;
 		write(str: string, cb?: Function): boolean;
@@ -231,9 +225,9 @@ declare namespace request {
 	}
 
 	export interface CookieJar {
-		setCookie(cookie: Cookie, uri: string | url.Url, options?: any): void
-		getCookieString(uri: string | url.Url): string
-		getCookies(uri: string | url.Url): Cookie[]
+		setCookie(cookie: Cookie, uri: string | Url, options?: any): void
+		getCookieString(uri: string | Url): string
+		getCookies(uri: string | Url): Cookie[]
 	}
 
 	export interface CookieValue {

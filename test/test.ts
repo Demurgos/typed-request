@@ -1,3 +1,3 @@
-import test = require('blue-tape');
+import * as test from 'blue-tape';
 
-import request = require('request');
+import * as request from 'request';
