@@ -2,6 +2,7 @@ import {Stream} from 'stream';
 import {Agent, ClientRequest, IncomingMessage} from 'http';
 import {Url} from 'url';
 import * as FormData from 'form-data';
+import * as toughCookie from "tough-cookie";
 
 declare var request: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>;
 
@@ -226,25 +227,8 @@ declare namespace request {
     bucket?: string;
   }
 
-  export interface CookieJar {
-    setCookie(cookie: Cookie, uri: string | Url, options?: any): void;
-    getCookieString(uri: string | Url): string;
-    getCookies(uri: string | Url): Cookie[];
-  }
-
-  export interface CookieValue {
-    name: string;
-    value: any;
-    httpOnly: boolean;
-  }
-
-  export interface Cookie extends Array<CookieValue> {
-    constructor(name: string, req: Request): void;
-    str: string;
-    expires: Date;
-    path: string;
-    toString(): string;
-  }
+  export type CookieJar = toughCookie.CookieJar;
+  export type Cookie = toughCookie.Cookie;
 }
 
 export = request;

@@ -2,7 +2,7 @@
   "name": "request",
   "main": "index.d.ts",
   "homepage": "https://github.com/request/request",
-  "version": "",
+  "version": "2.69.0",
   "devDependencies": {
     "blue-tape": "registry:npm/blue-tape#0.1.0+20160322235613"
   },
@@ -13,6 +13,7 @@
     "node": "registry:dt/node#4.0.0+20160423143914"
   },
   "dependencies": {
-    "form-data": "registry:npm/form-data#1.0.0+20160211003958"
+    "form-data": "registry:npm/form-data#1.0.0+20160211003958",
+    "tough-cookie": "registry:npm/tough-cookie#2.2.0+20160211003958"
   }
 }
