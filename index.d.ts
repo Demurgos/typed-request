@@ -1,6 +1,5 @@
 import {Stream} from 'stream';
 import {Agent, ClientRequest, IncomingMessage} from 'http';
-// import {Url} from 'url';
 import * as FormData from 'form-data';
 import * as toughCookie from 'tough-cookie';
 
@@ -227,8 +226,39 @@ declare namespace request {
     bucket?: string;
   }
 
-  export type CookieJar = toughCookie.CookieJar;
+  /**
+   * Cookies
+   */
+  // Request wraps the `tough-cookies`'s CookieJar in a synchronous RequestJar
+  // https://github.com/request/request/blob/master/lib/cookies.js
   export type Cookie = toughCookie.Cookie;
+  export type CookieStore = toughCookie.Store;
+  export type SetCookieOptions = toughCookie.SetCookieOptions;
+
+  export class CookieJar {
+    /**
+     * @param store defaults to toughCookie.MemoryCookieStore
+     */
+    constructor (store?: CookieStore);
+
+    // RequestJar.prototype.setCookie = function(cookieOrStr, uri, options) {
+    //   var self = this
+    //   return self._jar.setCookieSync(cookieOrStr, uri, options || {})
+    // }
+    setCookie(cookieOrString: Cookie | string, uri: string, options?: SetCookieOptions): Cookie;
+
+    // RequestJar.prototype.getCookieString = function(uri) {
+    //   var self = this
+    //   return self._jar.getCookieStringSync(uri)
+    // }
+    getCookieString(uri: string): string;
+
+    // RequestJar.prototype.getCookies = function(uri) {
+    //   var self = this
+    //   return self._jar.getCookiesSync(uri)
+    // }
+    getCookies(uri: string): Cookie[];
+  }
 }
 
 export = request;
