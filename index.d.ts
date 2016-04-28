@@ -68,7 +68,7 @@ declare namespace request {
   interface CoreOptions {
     baseUrl?: string;
     callback?: (error: any, response: IncomingMessage, body: any) => void;
-    jar?: CookieJar;
+    jar?: boolean | CookieJar;
     formData?: any; // Object
     form?: any; // Object or string
     auth?: AuthOptions;
