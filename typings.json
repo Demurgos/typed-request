@@ -1,11 +1,19 @@
 {
   "name": "request",
   "main": "index.d.ts",
-  "dependencies": {
-    "form-data": "github:typed-typings/npm-form-data#edc32200ec6065d98bfaa7ff9cfd104e17c5d3e4"
+  "homepage": "https://github.com/request/request",
+  "version": "2.69.0",
+  "devDependencies": {
+    "blue-tape": "registry:npm/blue-tape#0.1.0+20160322235613"
   },
-  "devDependencies": {},
+  "ambientDevDependencies": {
+    "node": "registry:dt/node#4.0.0+20160319033040"
+  },
   "ambientDependencies": {
-    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#48c1e3c1d6baefa4f1a126f188c27c4fefd36bff"
+    "node": "registry:dt/node#4.0.0+20160423143914"
+  },
+  "dependencies": {
+    "form-data": "registry:npm/form-data#1.0.0+20160211003958",
+    "tough-cookie": "registry:npm/tough-cookie#2.2.0+20160211003958"
   }
 }
