@@ -235,12 +235,7 @@ declare namespace request {
   export type CookieStore = toughCookie.Store;
   export type SetCookieOptions = toughCookie.SetCookieOptions;
 
-  export class CookieJar {
-    /**
-     * @param store defaults to toughCookie.MemoryCookieStore
-     */
-    constructor (store?: CookieStore);
-
+  export interface CookieJar {
     // RequestJar.prototype.setCookie = function(cookieOrStr, uri, options) {
     //   var self = this
     //   return self._jar.setCookieSync(cookieOrStr, uri, options || {})
