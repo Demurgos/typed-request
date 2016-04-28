@@ -1,8 +1,8 @@
 import {Stream} from 'stream';
 import {Agent, ClientRequest, IncomingMessage} from 'http';
-import {Url} from 'url';
+// import {Url} from 'url';
 import * as FormData from 'form-data';
-import * as toughCookie from "tough-cookie";
+import * as toughCookie from 'tough-cookie';
 
 declare var request: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>;
 
