@@ -9,41 +9,97 @@ declare namespace request {
   export interface RequestAPI<TRequest extends Request,
     TOptions extends CoreOptions,
     TUriUrlOptions> {
-
-    defaults(options: TOptions): RequestAPI<TRequest, TOptions, RequiredUriUrl>;
-    defaults(options: RequiredUriUrl & TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
-
+  
     (uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
     (uri: string, callback?: RequestCallback): TRequest;
     (options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
+    
+    // -------------------
+    // Convenience methods
+    // -------------------
 
-    get(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
-    get(uri: string, callback?: RequestCallback): TRequest;
-    get(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
-
-    post(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
-    post(uri: string, callback?: RequestCallback): TRequest;
-    post(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
-
+    /**
+     * This method returns a wrapper around the normal request API that defaults to whatever options you pass to it.
+     * 
+     * Note: `request.defaults()` does not modify the global request API; instead, it returns a wrapper that has your 
+     *   default settings applied to it.
+     * 
+     * Note: You can call `.defaults()` on the wrapper that is returned from request.defaults to add/override defaults 
+     *   that were previously defaulted.
+     * 
+     * For example:
+     * ```js
+     * //requests using baseRequest() will set the 'x-token' header
+     * var baseRequest = request.defaults({
+     *   headers: {'x-token': 'my-token'}
+     * })
+     *
+     * //requests using specialRequest() will include the 'x-token' header set in
+     * //baseRequest and will also include the 'special' header
+     * var specialRequest = baseRequest.defaults({
+     *   headers: {special: 'special value'}
+     * })
+     * ```
+     */
+    defaults(options: TOptions): RequestAPI<TRequest, TOptions, RequiredUriUrl>;
+    defaults(options: RequiredUriUrl & TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
+    
+    /**
+     * Same as `request()`, but defaults to method: "PUT".
+     */
     put(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
     put(uri: string, callback?: RequestCallback): TRequest;
     put(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
 
-    head(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
-    head(uri: string, callback?: RequestCallback): TRequest;
-    head(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
-
+    /**
+     * Same as `request()`, but defaults to method: "PATCH".
+     */
     patch(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
     patch(uri: string, callback?: RequestCallback): TRequest;
     patch(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
 
+    /**
+     * Same as request(), but defaults to method: "POST".
+     */
+    post(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
+    post(uri: string, callback?: RequestCallback): TRequest;
+    post(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
+    
+    /**
+     * Same as request(), but defaults to method: "HEAD".
+     */
+    head(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
+    head(uri: string, callback?: RequestCallback): TRequest;
+    head(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
+
+    /**
+     * Same as request(), but defaults to method: "DELETE".
+     */
     del(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
     del(uri: string, callback?: RequestCallback): TRequest;
     del(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
-
-    forever(agentOptions: any, optionsArg: any): TRequest;
-    jar(): CookieJar;
+    delete(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
+    delete(uri: string, callback?: RequestCallback): TRequest;
+    delete(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
+    
+    /**
+     * Same as request() (for uniformity).
+     */
+    get(uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
+    get(uri: string, callback?: RequestCallback): TRequest;
+    get(options: TUriUrlOptions & TOptions, callback?: RequestCallback): TRequest;
+    
+    /**
+     * Function that creates a new cookie.
+     */
     cookie(str: string): Cookie;
+    
+    /**
+     * Function that creates a new cookie jar.
+     */
+    jar(): CookieJar;
+    
+    forever(agentOptions: any, optionsArg: any): TRequest;
 
     initParams: any;
     debug: boolean;
