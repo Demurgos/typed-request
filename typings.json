@@ -1,6 +1,6 @@
 {
   "name": "request",
-  "main": "index.d.ts",
+  "main": "request.d.ts",
   "homepage": "https://github.com/request/request",
   "version": "2.69.0",
   "devDependencies": {
