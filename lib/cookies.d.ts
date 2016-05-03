@@ -1,4 +1,4 @@
-import {Cookie, Store, SetCookieOptions} from "tough-cookie";
+import {Cookie, Store, SetCookieOptions} from 'tough-cookie';
 
 export function parse(str: string | {uri: string}): Cookie;
 
@@ -32,4 +32,4 @@ export interface RequestJar {
 
 export function jar(store: Store): RequestJar;
 
-export {Cookie, Store, SetCookieOptions} from "tough-cookie";
+export {Cookie, Store, SetCookieOptions} from 'tough-cookie';

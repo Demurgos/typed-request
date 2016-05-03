@@ -1,5 +1,5 @@
 import * as test from 'blue-tape';
-import * as Bluebird from "bluebird";
+import * as Bluebird from 'bluebird';
 
 import * as request from 'request';
 
@@ -8,16 +8,15 @@ test('request-general', (t) => {
   t.equal(typeof request, 'function');
 });
 
-
 test('request-get', (t) => {
-  const URL = "https://api.typings.org/entries/npm/request";
+  const URL = 'https://api.typings.org/entries/npm/request';
 
   let options: request.CoreOptions & request.UriOptions = {
     headers: {},
     timeout: 60000,
     qs: {},
     uri: URL,
-    method: "GET",
+    method: 'GET',
     jar: null,
     gzip: true
   };
@@ -27,7 +26,7 @@ test('request-get', (t) => {
       if (error) {
         return cb(error);
       }
-      t.equal(typeof response.statusCode, "number");
+      t.equal(typeof response.statusCode, 'number');
       return cb(null, null);
     });
   });

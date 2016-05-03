@@ -2,14 +2,16 @@ import {Stream} from 'stream';
 import {Agent, ClientRequest, IncomingMessage} from 'http';
 import * as FormData from 'form-data';
 
+import * as auth from './lib/auth';
 import * as cookies from './lib/cookies';
+import * as har from './lib/har';
+import * as multipart from './lib/multipart';
+import * as oauth from './lib/oauth';
 
-declare var request: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>;
+declare let request: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>;
 
 declare namespace request {
-  export interface RequestAPI<TRequest extends Request,
-    TOptions extends CoreOptions,
-    TUriUrlOptions> {
+  export interface RequestAPI<TRequest extends Request, TOptions extends CoreOptions, TUriUrlOptions> {
 
     (uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
     (uri: string, callback?: RequestCallback): TRequest;
@@ -109,9 +111,8 @@ declare namespace request {
     debug: boolean;
   }
 
-  interface DefaultUriUrlRequestApi<TRequest extends Request,
-    TOptions extends CoreOptions,
-    TUriUrlOptions>	extends RequestAPI<TRequest, TOptions, TUriUrlOptions> {
+  interface DefaultUriUrlRequestApi<TRequest extends Request, TOptions extends CoreOptions,TUriUrlOptions>
+  extends RequestAPI<TRequest, TOptions, TUriUrlOptions> {
 
     defaults(options: TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
     defaults(options: RequiredUriUrl & TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
@@ -273,37 +274,13 @@ declare namespace request {
   export type OptionsWithUrl = UrlOptions & CoreOptions;
   export type Options = OptionsWithUri | OptionsWithUrl;
 
-  export interface RequestCallback {
-    /**
-     * @param error An error when applicable (usually from `http.ClientRequest` object)
-     * @param response An `http.IncomingMessage` object
-     * @param body The third is the response body (String or Buffer, or JSON object if the json option is supplied)
-     */
-    (error: any, response: IncomingMessage, body: any): void;
-  }
-
-  export interface HttpArchiveRequest {
-    url?: string;
-    method?: string;
-    headers?: NameValuePair[];
-    postData?: {
-      mimeType?: string;
-      params?: NameValuePair[];
-    };
-  }
-
-  export interface NameValuePair {
-    name: string;
-    value: string;
-  }
-
-  export interface Multipart {
-    chunked?: boolean;
-    data?: {
-      'content-type'?: string,
-      body: string
-    }[];
-  }
+  /**
+   * @param error An error when applicable (usually from `http.ClientRequest` object)
+   * @param response An `http.IncomingMessage` object
+   * @param body The third is the response body (String or Buffer, or JSON object if the json option is supplied)
+   */
+  export type TypedRequestCallback<B> = (error: Error, response: IncomingMessage, body: B) => any;
+  export type RequestCallback = TypedRequestCallback<string | Buffer | Object>;
 
   export interface RequestPart {
     headers?: Headers;
@@ -330,12 +307,12 @@ declare namespace request {
     oauth(oauth: OAuthOptions): Request;
     jar(jar: CookieJar): Request;
 
-    on(event: string, listener: Function): this;
     on(event: 'request', listener: (req: ClientRequest) => void): this;
     on(event: 'response', listener: (resp: IncomingMessage) => void): this;
     on(event: 'data', listener: (data: Buffer | string) => void): this;
     on(event: 'error', listener: (e: Error) => void): this;
     on(event: 'complete', listener: (resp: IncomingMessage, body?: string | Buffer) => void): this;
+    on(event: string, listener: Function): this;
 
     write(buffer: Buffer, cb?: Function): boolean;
     write(str: string, cb?: Function): boolean;
@@ -356,24 +333,6 @@ declare namespace request {
     [key: string]: any;
   }
 
-  export interface AuthOptions {
-    user?: string;
-    username?: string;
-    pass?: string;
-    password?: string;
-    sendImmediately?: boolean;
-    bearer?: string;
-  }
-
-  export interface OAuthOptions {
-    callback?: string;
-    consumer_key?: string;
-    consumer_secret?: string;
-    token?: string;
-    token_secret?: string;
-    verifier?: string;
-  }
-
   export interface HawkOptions {
     credentials: any;
   }
@@ -383,6 +342,13 @@ declare namespace request {
     bucket?: string;
   }
 
+  // Re-export types
+
+  /**
+   * Auth
+   */
+  export type AuthOptions = auth.AuthOptions;
+
   /**
    * Cookies
    */
@@ -390,6 +356,22 @@ declare namespace request {
   export type CookieStore = cookies.Store;
   export type SetCookieOptions = cookies.SetCookieOptions;
   export type CookieJar = cookies.RequestJar;
+
+  /**
+   * HttpArchiveRequest
+   */
+  export type NameValuePair = har.NameValuePair;
+  export type HttpArchiveRequest = har.HttpArchiveRequest;
+
+  /**
+   * Multipart
+   */
+  export type Multipart = multipart.Multipart;
+
+  /**
+   * OAuth
+   */
+  export type OAuthOptions = oauth.OAuthOptions;
 }
 
 export = request;
