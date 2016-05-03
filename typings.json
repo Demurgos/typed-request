@@ -4,7 +4,8 @@
   "homepage": "https://github.com/request/request",
   "version": "2.69.0",
   "devDependencies": {
-    "blue-tape": "registry:npm/blue-tape#0.1.0+20160322235613"
+    "blue-tape": "registry:npm/blue-tape#0.1.0+20160322235613",
+    "bluebird": "registry:npm/bluebird#3.3.4+20160427051630"
   },
   "ambientDevDependencies": {
     "node": "registry:dt/node#4.0.0+20160319033040"
@@ -14,6 +15,6 @@
   },
   "dependencies": {
     "form-data": "registry:npm/form-data#1.0.0+20160211003958",
-    "tough-cookie": "registry:npm/tough-cookie#2.2.0+20160211003958"
+    "tough-cookie": "registry:npm/tough-cookie#2.2.0+20160428222547"
   }
 }
