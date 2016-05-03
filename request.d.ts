@@ -115,6 +115,7 @@ declare namespace request {
      */
     debug: boolean;
   }
+  export type StaticRequest<TRequest extends Request, TOptions extends CoreOptions, TUriUrlOptions> = RequestAPI<TRequest, TOptions, TUriUrlOptions>;
 
   interface DefaultUriUrlRequestApi<TRequest extends Request, TOptions extends CoreOptions, TUriUrlOptions>
   extends RequestAPI<TRequest, TOptions, TUriUrlOptions> {
