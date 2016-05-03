@@ -11,6 +11,10 @@ import * as oauth from './lib/oauth';
 declare let request: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>;
 
 declare namespace request {
+
+  /**
+   * @generic TRequest
+   */
   export interface RequestAPI<TRequest extends Request, TOptions extends CoreOptions, TUriUrlOptions> {
 
     (uri: string, options?: TOptions, callback?: RequestCallback): TRequest;
@@ -105,13 +109,14 @@ declare namespace request {
     forever(agentOptions: any, optionsArg: any): TRequest;
 
     initParams: any;
+
     /**
      * Set `require('request').debug = true` at any time to debug.
      */
     debug: boolean;
   }
 
-  interface DefaultUriUrlRequestApi<TRequest extends Request, TOptions extends CoreOptions,TUriUrlOptions>
+  interface DefaultUriUrlRequestApi<TRequest extends Request, TOptions extends CoreOptions, TUriUrlOptions>
   extends RequestAPI<TRequest, TOptions, TUriUrlOptions> {
 
     defaults(options: TOptions): DefaultUriUrlRequestApi<TRequest, TOptions, OptionalUriUrl>;
@@ -134,10 +139,12 @@ declare namespace request {
      *   be a string.
      */
     baseUrl?: string;
+
     /**
      * alternatively pass the request's callback in the options object
      */
     callback?: (error: any, response: IncomingMessage, body: any) => void;
+
     jar?: boolean | CookieJar;
     /**
      * Data to pass for a multipart/form-data request.
@@ -257,21 +264,27 @@ declare namespace request {
     jsonReplacer?: Function;
   }
 
-  interface UriOptions {
+  interface UriContainer {
     uri: string;
   }
-  interface UrlOptions {
+  // Compatibility with older typings (v.2.69.0, 2016-05-03)
+  export type UriOptions = UriContainer;
+
+  interface UrlContainer {
     url: string;
   }
-  export type RequiredUriUrl = UriOptions | UrlOptions;
+  // Compatibility with older typings (v.2.69.0, 2016-05-03)
+  export type UrlOptions = UrlContainer;
+
+  export type RequiredUriUrl = UriContainer | UrlContainer;
 
   interface OptionalUriUrl {
     uri?: string;
     url?: string;
   }
 
-  export type OptionsWithUri = UriOptions & CoreOptions;
-  export type OptionsWithUrl = UrlOptions & CoreOptions;
+  export type OptionsWithUri = UriContainer & CoreOptions;
+  export type OptionsWithUrl = UrlContainer & CoreOptions;
   export type Options = OptionsWithUri | OptionsWithUrl;
 
   /**
@@ -279,8 +292,12 @@ declare namespace request {
    * @param response An `http.IncomingMessage` object
    * @param body The third is the response body (String or Buffer, or JSON object if the json option is supplied)
    */
-  export type TypedRequestCallback<B> = (error: Error, response: IncomingMessage, body: B) => any;
-  export type RequestCallback = TypedRequestCallback<string | Buffer | Object>;
+  export interface TypedRequestCallback<B> {
+    (error: Error, response: IncomingMessage, body: B): any;
+  }
+  export interface RequestCallback extends TypedRequestCallback<any> { // string | Buffer | Object
+
+  }
 
   export interface RequestPart {
     headers?: Headers;
@@ -295,17 +312,24 @@ declare namespace request {
     // start(): void;
     // abort(): void;
     pipeDest(dest: any): void;
-    setHeader(name: string, value: string, clobber?: boolean): Request;
-    setHeaders(headers: Headers): Request;
-    qs(q: Object, clobber?: boolean): Request;
+    setHeader(name: string, value: string, clobber?: boolean): this;
+    setHeaders(headers: Headers): this;
+    qs(q: Object, clobber?: boolean): this;
     form(): FormData;
-    form(form: any): Request;
-    multipart(multipart: RequestPart[]): Request;
-    json(val: any): Request;
-    aws(opts: AWSOptions, now?: boolean): Request;
-    auth(username: string, password: string, sendInmediately?: boolean, bearer?: string): Request;
-    oauth(oauth: OAuthOptions): Request;
-    jar(jar: CookieJar): Request;
+    form(form: any): this;
+    multipart(multipart: RequestPart[]): this;
+    json(val: any): this;
+    aws(opts: AWSOptions, now?: boolean): this;
+    auth(username: string, password: string, sendInmediately?: boolean, bearer?: string): this;
+    oauth(oauth: OAuthOptions): this;
+    jar(jar: CookieJar): this;
+
+    addEventListener(event: 'request', listener: (req: ClientRequest) => void): this;
+    addEventListener(event: 'response', listener: (resp: IncomingMessage) => void): this;
+    addEventListener(event: 'data', listener: (data: Buffer | string) => void): this;
+    addEventListener(event: 'error', listener: (e: Error) => void): this;
+    addEventListener(event: 'complete', listener: (resp: IncomingMessage, body?: string | Buffer) => void): this;
+    addEventListener(event: string, listener: Function): this;
 
     on(event: 'request', listener: (req: ClientRequest) => void): this;
     on(event: 'response', listener: (resp: IncomingMessage) => void): this;
@@ -313,6 +337,13 @@ declare namespace request {
     on(event: 'error', listener: (e: Error) => void): this;
     on(event: 'complete', listener: (resp: IncomingMessage, body?: string | Buffer) => void): this;
     on(event: string, listener: Function): this;
+
+    once(event: 'request', listener: (req: ClientRequest) => void): this;
+    once(event: 'response', listener: (resp: IncomingMessage) => void): this;
+    once(event: 'data', listener: (data: Buffer | string) => void): this;
+    once(event: 'error', listener: (e: Error) => void): this;
+    once(event: 'complete', listener: (resp: IncomingMessage, body?: string | Buffer) => void): this;
+    once(event: string, listener: Function): this;
 
     write(buffer: Buffer, cb?: Function): boolean;
     write(str: string, cb?: Function): boolean;
