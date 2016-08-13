@@ -233,6 +233,7 @@ declare namespace request {
      *   timeout option (the default in Linux can be anywhere from 20-120 seconds).
      */
     timeout?: number;
+    time?: boolean;
     proxy?: any;
     strictSSL?: boolean;
     gzip?: boolean;
